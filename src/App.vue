@@ -1,16 +1,33 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <CreatePlayer @players-list="createdPlayers" />
+  <EditPlayers :playersList="playersList" />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CreatePlayer from './components/CreatePlayer.vue'
+import EditPlayers from './components/EditPlayers.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    CreatePlayer,
+    EditPlayers
+  },
+  data() {
+    return {
+      playersList: []
+    }
+  },
+
+  created() {
+    
+  },
+
+  methods: {
+    createdPlayers(list) {
+      this.playersList = list;
+    }
+  },
 }
 </script>
 
@@ -21,6 +38,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 60px auto;
+  width: 600px;
 }
 </style>
