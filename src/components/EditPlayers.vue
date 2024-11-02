@@ -1,105 +1,134 @@
 <template>
   <h1>Редактирование игроков</h1>
 
-  <div
-    v-for="item in usersLife"
-    :key="item.name"
-    class="row"
-  >
-      <input id="name" v-model="item.name">
-      <a class="button" href="#" @click.prevent="minusLife(item)">-</a>
-      <span class="lifeCount">{{item.life}}</span>
-      <a class="button" href="#" @click.prevent="plusLife(item)">+</a>
+  <div v-for="(item, index) in playersList" :key="index" class="row">
+    <input id="name" v-model="item.name" placeholder="Имя" />
+    <div class="count-container">
+      <button
+        :disabled="!item.life"
+        class="count-btn"
+        @click.prevent="minusLife(item)"
+      >
+        -
+      </button>
+      <span class="lifeCount">{{ item.life }}</span>
+      <button class="count-btn" @click.prevent="plusLife(item)">+</button>
+    </div>
   </div>
-  
+
   <h2>Рейтинг</h2>
   <table>
-    <tr
-    v-for="(item, index) in rating"
-    :key="index"
-    >
-    <td v-text="`${index + 1}`"></td>
-    <td v-text="`У игрока <b>${item.name}</b> ${item.life} жизней`"></td>
-  </tr>
+    <tr v-for="(item, index) in rating" :key="index">
+      <td v-text="`${index + 1}`"></td>
+      <td>
+        У игрока <b>{{ item.name }}</b> {{ item.life }} жизней
+      </td>
+    </tr>
   </table>
 </template>
 
 <script>
 export default {
-  name: 'LifeCounter',
+  name: "EditPlayers",
 
   props: {
     playersList: {
-      type: Array
+      type: Array,
     },
   },
-  
-  data () {
-    return {
-    };
+
+  data() {
+    return {};
   },
-  
-  created() {
-    for (let i = 0; i < this.playersList; i++) {
-      this.usersLife.push({
-        name: this.playersList.name,
-        life: this.playersList.life
-      });
-    }
-  },
-  
+
   computed: {
-    usersLife () {
-      return [...this.playersList]
+    rating() {
+      return [...this.playersList].sort((a, b) => b.life - a.life);
     },
-    rating () {
-      let places = this.usersLife;
-  
-      places.sort((a, b) => b.life - a.life);
-     
-      return places;
-    }
   },
-  
+
   methods: {
-    plusLife (item) {
+    plusLife(item) {
       item.life++;
     },
 
-    minusLife (item) {
+    minusLife(item) {
       item.life--;
-    }
+    },
   },
-}
+};
 </script>
 
 <style lang="scss">
-    .row {
-        display: flex;
-        align-items: center;
-        margin-top: 20px;
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
 
-        input {
-            margin-right: 12px;
-            width: 100%;
-            height: 24px;
-        }
-
-        .button {
-          width: 24px;
-          height: 24px;
-        }
-
-        .life {
-          margin: 0 12px;
-        }
+  input {
+    margin-right: 8px;
+    width: 60%;
+    padding: 4px 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    &:focus {
+      border-color: #3a86ff;
+      outline: none;
     }
+  }
 
-    table {
-      width: 100%;
-
-      td {
-        border: 1px solid #2c3e50;
+  .count-container {
+    display: flex;
+    justify-content: space-between;
+    min-width: 150px;
+    .count-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin: 0 8px;
+      border: none;
+      background-color: #3a86ff;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      &:hover {
+        background-color: #005fcb;
+      }
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+        &:hover {
+          background-color: #cccccc;
+        }
       }
     }
+
+    .lifeCount {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  td {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    text-align: center;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}
 </style>

@@ -17,12 +17,13 @@
       </button>
     </div>
 
-    <div v-if="currentView === 'create'">
-      <CreatePlayer @players-list="createdPlayers" />
-    </div>
-    <div v-else>
-      <EditPlayers :playersList="playersList" />
-    </div>
+    <keep-alive>
+      <component
+        :is="currentComponent"
+        @players-list="createdPlayers"
+        :playersList="playersList"
+      />
+    </keep-alive>
   </div>
 </template>
 
@@ -44,6 +45,12 @@ export default {
   },
 
   created() {},
+
+  computed: {
+    currentComponent() {
+      return this.currentView === "create" ? "CreatePlayer" : "EditPlayers";
+    },
+  },
 
   methods: {
     createdPlayers(list) {
@@ -69,10 +76,17 @@ export default {
   margin: 0 10px;
   cursor: pointer;
   font-size: 16px;
-}
-
-.tab-btn.active {
-  background-color: #00bd69;
-  color: #fff;
+  color: #000;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: #005fcb;
+    color: #fff;
+  }
+  &.active {
+    background-color: #3a86ff;
+    color: #fff;
+  }
 }
 </style>
