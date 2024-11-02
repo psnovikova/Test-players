@@ -8,36 +8,41 @@
       v-model.number="players_life"
       placeholder="Жизней"
     />
-    <button type="button" v-on:click="createPlayer">Создать</button>
+    <button type="button" @click="createPlayer">Создать</button>
+    <ErrorMessage ref="errorMessageRef" :message="errorMessage" />
   </div>
 </template>
 
 <script>
+import ErrorMessage from "@/components/ErrorMessage.vue";
 export default {
   name: "CreatePlayer",
+  components: { ErrorMessage },
 
   data() {
     return {
       players: [],
       players_name: "",
       players_life: "",
+      errorMessage: "",
     };
   },
 
   methods: {
     createPlayer() {
+      this.errorMessage = "";
       if (!this.players_name) {
-        alert("Укажите имя");
+        this.showError("Укажите имя");
         return;
       }
 
       if (!this.players_life) {
-        alert("Укажите количество жизней");
+        this.showError("Укажите количество жизней");
         return;
       }
 
       if (this.players_life <= 0) {
-        alert("Количество жизней должно быть больше нуля");
+        this.showError("Количество жизней должно быть больше нуля");
         return;
       }
 
@@ -50,6 +55,10 @@ export default {
       this.players_life = "";
 
       this.$emit("players-list", this.players);
+    },
+    showError(message) {
+      this.errorMessage = message;
+      this.$refs.errorMessageRef.showAlert();
     },
   },
 };
